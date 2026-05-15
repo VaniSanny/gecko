@@ -1,65 +1,137 @@
-import Image from "next/image";
+'use client';
+import { useState } from 'react';
+import { Search, Gamepad2, Users, Ghost, Info } from 'lucide-react';
 
-export default function Home() {
+const CATEGORIES = [
+  {
+    title: "Minigames & Punkte",
+    icon: <Gamepad2 className="text-purple-400 w-6 h-6" />,
+    commands: [
+      { trigger: "!geckonis", desc: "Zeigt deine aktuellen Geckonis 💎 an." },
+      { trigger: "!geckonis top", desc: "Zeigt die Top 5 der reichsten Zuschauer." },
+      { trigger: "!gamble <menge|all>", desc: "50/50 Chance! Verdopple deinen Einsatz oder verliere alles." },
+      { trigger: "!slots <menge>", desc: "Spiele an der Slotmaschine. 3 gleiche Emojis bringen den Jackpot!" },
+      { trigger: "!rob @user", desc: "Versuche, einem anderen User Punkte zu klauen (40% Chance)." },
+      { trigger: "!fight @user <menge>", desc: "Fordere jemanden zum Duell um Punkte heraus." },
+      { trigger: "!claim", desc: "Sammle einen aktiven Drop im Chat ein! Sei der Erste!" },
+    ]
+  },
+  {
+    title: "Phasmophobia",
+    icon: <Ghost className="text-purple-400 w-6 h-6" />,
+    commands: [
+      { trigger: "!phasmomap <map>", desc: "Erkaufe dir eine Map für die nächste Runde!", cost: "50 💎" },
+      { trigger: "!challenge <chal>", desc: "Zwinge den Streamer zu einer Challenge (z.B. Keine Items).", cost: "1000 💎" },
+      { trigger: "!guess <geist>", desc: "Gib deinen Tipp ab, welcher Geist es ist." },
+      { trigger: "!randommap", desc: "Zieht zufällig die nächste Map." },
+      { trigger: "!randomghost", desc: "Zieht einen zufälligen Geist." },
+      { trigger: "!deaths", desc: "Zeigt an, wie oft MoltenGeckoVT schon gestorben ist." },
+    ]
+  },
+  {
+    title: "Community & Lurk",
+    icon: <Users className="text-purple-400 w-6 h-6" />,
+    commands: [
+      { trigger: "!lurk / !back", desc: "Verabschiede dich in den Lurk und melde dich wieder zurück." },
+      { trigger: "!lurker", desc: "Zeigt an, wer gerade alles fleißig lurkt." },
+      { trigger: "!hug @user", desc: "Umarme einen anderen Zuschauer." },
+      { trigger: "!love @user", desc: "Berechnet die Liebe zwischen dir und einem User." },
+      { trigger: "!bonk @user", desc: "Verteile einen Bonk!" },
+      { trigger: "!snack @user", desc: "Wirf jemandem einen Snack zu." },
+      { trigger: "!iq", desc: "Wie hoch ist dein Chat-IQ heute?" },
+      { trigger: "!quote", desc: "Ruft ein zufälliges Zitat aus vergangenen Streams ab." },
+    ]
+  },
+  {
+    title: "Info & Stream",
+    icon: <Info className="text-purple-400 w-6 h-6" />,
+    commands: [
+      { trigger: "!watchtime", desc: "Zeigt an, wie lange du dem Stream schon zugeschaut hast." },
+      { trigger: "!nachrichten", desc: "Zeigt an, wie viele Nachrichten du schon geschrieben hast." },
+      { trigger: "!held <name>", desc: "Verkünde deinen Wunschhelden lautstark im Chat.", cost: "25 💎" },
+      { trigger: "!uptime", desc: "Wie lange läuft der Stream schon?" },
+      { trigger: "!game", desc: "Zeigt das aktuelle Spiel und den Streamtitel." },
+      { trigger: "!followage", desc: "Zeigt an, wie lange du dem Kanal schon folgst." },
+      { trigger: "!accountage", desc: "Zeigt das Alter deines Twitch-Accounts." },
+      { trigger: "!discord / !socials", desc: "Links zu Discord und Social Media." },
+    ]
+  }
+];
+
+export default function CommandsPage() {
+  const [search, setSearch] = useState('');
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div className="min-h-[calc(100vh-4rem)] pt-12 pb-24 relative overflow-hidden text-slate-200 font-sans">
+      <div className="max-w-5xl mx-auto px-4 relative z-10">
+        <header className="text-center mb-16">
+          <div className="inline-block mb-4 p-4 rounded-full bg-white/5 border border-white/10 shadow-xl shadow-purple-900/20">
+            <span className="text-5xl block animate-pulse">🦎</span>
+          </div>
+          <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-3 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">
+            Kanal-Befehle
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="text-white/50 text-lg max-w-lg mx-auto">
+            Hier findest du alle interaktiven Commands und Minigames für den Twitch Chat!
           </p>
+        </header>
+
+        <div className="max-w-md mx-auto mb-16 relative group">
+          <div className="absolute inset-y-0 left-5 flex items-center pointer-events-none">
+            <Search className="w-5 h-5 text-white/30 group-focus-within:text-purple-400 transition-colors" />
+          </div>
+          <input 
+            type="text" 
+            placeholder="Befehl suchen (z.B. !hug)..." 
+            className="w-full bg-white/5 border border-white/10 rounded-full py-4 pl-14 pr-6 text-white outline-none focus:border-purple-500/50 focus:bg-black/40 transition-all focus:ring-4 focus:ring-purple-500/10 shadow-lg shadow-black/20"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+          {CATEGORIES.map((cat, i) => {
+            const filtered = cat.commands.filter(c => 
+              c.trigger.toLowerCase().includes(search.toLowerCase()) || 
+              c.desc.toLowerCase().includes(search.toLowerCase())
+            );
+
+            if (filtered.length === 0) return null;
+
+            return (
+              <div key={i} className="bg-black/40 border border-white/10 rounded-[2rem] p-6 sm:p-8 backdrop-blur-xl hover:border-purple-500/30 transition-all hover:shadow-2xl hover:shadow-purple-900/10 duration-300">
+                <h2 className="text-xl font-black text-white uppercase tracking-wider mb-6 flex items-center gap-3">
+                  <div className="p-2.5 rounded-xl bg-purple-500/10 border border-purple-500/20 shadow-inner">
+                    {cat.icon}
+                  </div>
+                  {cat.title}
+                </h2>
+                <div className="flex flex-col gap-4">
+                  {filtered.map((cmd, j) => (
+                    <div key={j} className="group/item flex flex-col gap-1.5 p-3 -mx-3 rounded-2xl hover:bg-white/5 transition-colors">
+                      <div className="flex items-center justify-between gap-2">
+                        <code className="bg-purple-500/10 border border-purple-500/20 text-purple-300 px-2.5 py-1 rounded-lg font-mono text-sm font-semibold tracking-wide shadow-sm">
+                          {cmd.trigger}
+                        </code>
+                        {cmd.cost && (
+                          <span className="bg-yellow-500/10 border border-yellow-500/30 text-yellow-200 text-xs px-2 py-1 rounded-lg font-bold flex items-center gap-1 shadow-sm">
+                            {cmd.cost}
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-sm text-white/50 leading-relaxed px-1 group-hover/item:text-white/70 transition-colors">{cmd.desc}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </div>
-      </main>
+
+        <footer className="mt-20 text-center text-white/30 text-sm font-medium tracking-wide">
+          Bot Made by <span className="text-purple-400/70">Vani</span> for <span className="text-yellow-400/70">LordGecko</span>
+        </footer>
+      </div>
     </div>
   );
 }
